@@ -1,5 +1,6 @@
 package queue
 
+/*
 import (
 	"log"
 	"sync"
@@ -70,3 +71,4 @@ func (p *Poller) process(m *sqs.Message, wg *sync.WaitGroup) {
 
 	log.Printf("Poller#%d: Successfully deleted message Id: %s\n", p.pollerID, *m.MessageId)
 }
+*/
