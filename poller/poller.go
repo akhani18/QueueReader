@@ -33,7 +33,7 @@ func (p *Poller) Start(q *queue.Queue) {
 			p.poll(q)
 
 		case <-p.stop:
-			fmt.Printf("Poller#%d: Stopping...", p.pollerID)
+			fmt.Printf("Poller#%d: Stopping...\n", p.pollerID)
 			return
 		}
 	}

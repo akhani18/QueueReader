@@ -76,11 +76,10 @@ func (a *Autoscaler) scaleDown() {
 // monitor
 func (a *Autoscaler) monitor() {
 	ticker := time.NewTicker(60 * time.Second)
+	sum := 0
+	count := 0
 
 	for {
-		sum := 0
-		count := 0
-
 		select {
 		case t := <-ticker.C:
 			fmt.Println("Time for autoscaling: ", t)
@@ -89,15 +88,21 @@ func (a *Autoscaler) monitor() {
 
 				if avg <= 0.75*MAX {
 					fmt.Println("Performing scale down at ", t)
+					a.scaleDown()
 				} else if avg >= MAX {
-					fmt.Println("Performing scale down at ", t)
+					fmt.Println("Performing scale up at ", t)
+					a.scaleUp()
+				} else {
+					fmt.Println("No autoscaling required")
 				}
+				sum = 0
+				count = 0
 			}
 
 		case numMsg := <-a.uc:
 			sum += numMsg
 			count++
-
+			//fmt.Printf("Accumulated messages %d, for count %d\n", sum, count)
 		}
 
 	}

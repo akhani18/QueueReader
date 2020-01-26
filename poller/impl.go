@@ -31,16 +31,20 @@ func (p *Poller) poll(q *queue.Queue) {
 	log.Printf("Poller#%d: Received %d messages.\n", p.pollerID, len(result.Messages))
 	p.utilizationChan <- len(result.Messages)
 
+	//log.Printf("Poller#%d: Received %d messages.\n", p.pollerID, 10)
+	//p.utilizationChan <- 10
+
 	for _, msg := range result.Messages {
 		go p.process(msg, q)
 	}
 }
 
+// Batch Delete
 func (p *Poller) process(m *sqs.Message, q *queue.Queue) {
 	// Process
-	log.Printf("Poller#%d: Message Id: %s\n", p.pollerID, *m.MessageId)
+	/*log.Printf("Poller#%d: Message Id: %s\n", p.pollerID, *m.MessageId)
 	log.Printf("Poller#%d: Message ReceiveCount: %s\n", p.pollerID, *m.Attributes["ApproximateReceiveCount"])
-	log.Printf("Poller#%d: Message Payload: %s\n", p.pollerID, *m.Body)
+	log.Printf("Poller#%d: Message Payload: %s\n", p.pollerID, *m.Body)*/
 
 	// Delete
 	_, err := q.SQSClient.DeleteMessage(&sqs.DeleteMessageInput{
@@ -53,5 +57,5 @@ func (p *Poller) process(m *sqs.Message, q *queue.Queue) {
 		return
 	}
 
-	log.Printf("Poller#%d: Successfully deleted message Id: %s\n", p.pollerID, *m.MessageId)
+	//log.Printf("Poller#%d: Successfully deleted message Id: %s\n", p.pollerID, *m.MessageId)
 }
