@@ -9,7 +9,12 @@ import (
 	"github.com/aws/aws-sdk-go/service/sqs"
 )
 
-func NewPoller(id int, qName *string, region *string, longPollDurationSec int64) *Poller {
+type Queue struct {
+	URL       *string
+	SQSClient *sqs.SQS
+}
+
+func New(qName *string, region *string) *Queue {
 	sess, _ := session.NewSession(&aws.Config{
 		Region: region,
 	})
@@ -27,10 +32,8 @@ func NewPoller(id int, qName *string, region *string, longPollDurationSec int64)
 
 	qURL := result.QueueUrl
 
-	return &Poller{
-		pollerID:        id,
-		queueURL:        qURL,
-		waitDurationSec: longPollDurationSec,
-		sqsClient:       svc,
+	return &Queue{
+		URL:       qURL,
+		SQSClient: svc,
 	}
 }
